@@ -1,0 +1,38 @@
+name: Run Python Script and Save Output
+
+on:
+  push:
+    branches:
+      - main  # You can customize this to the branch you want
+
+jobs:
+  run_python_script:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8  # You can change the Python version as needed
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # If you have any dependencies
+
+    - name: Run Python Script
+      run: python main.py  # Replace with the actual name of your Python script
+
+      env:
+        API_KEY: ${{ secrets.API_KEY }}  # Assuming you have a secret named API_KEY
+
+    - name: Commit and Push Changes
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add data/
+        git commit -m "Add CSV output"
+        git push
